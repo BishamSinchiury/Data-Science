@@ -1,4 +1,5 @@
 # [Video](https://youtu.be/wybGoLqI2oU)
+# [Video2](https://youtu.be/9uNOeFR6wnU)
 # Step 2: Data Collection Guide
 
 This is our walkthrough for gathering all four datasets needed for the housing recommendation project: house prices, broadband speed, crime, and air quality (our chosen fourth factor). We'll also set up the report document that ties everything together.
