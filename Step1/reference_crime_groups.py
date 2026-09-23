@@ -44,7 +44,6 @@ def group_crime_type(raw_crime_type: str) -> str:
     print(f"WARNING: unrecognised crime type '{raw_crime_type}' -> grouped as 'Other'")
     return "Other"
 
-
 if __name__ == "__main__":
     print("Crime type grouping:")
     for group in ["Violent", "Property", "Other"]:
@@ -52,3 +51,6 @@ if __name__ == "__main__":
         print(f"\n{group}:")
         for t in types_here:
             print(f"  - {t}")
+
+
+

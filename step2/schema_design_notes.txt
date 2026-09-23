@@ -1,0 +1,54 @@
+SCHEMA DESIGN NOTES (for review before we build it)
+======================================================
+
+Entities and why they're separate tables (this is our 3NF justification):
+
+1. counties
+   - county_id (PK), county_name
+   - Why separate: county_name would otherwise repeat on every town row.
+
+2. districts
+   - district_id (PK), district_name, county_id (FK -> counties)
+   - Why separate: district-level data (broadband, air quality) belongs
+     here, not on the town, since multiple towns can share one district
+     (Medway, Thanet, Monmouthshire). Putting broadband/air quality
+     directly on the town table would duplicate identical values across
+     Chatham/Rochester/Gillingham rows -- a textbook 2NF/3NF violation
+     (non-key attributes depending on district, not on the town's own key).
+
+3. towns
+   - town_id (PK), town_name, district_id (FK -> districts), population
+
+4. broadband (one row per district, not per town)
+   - district_id (PK, FK -> districts), median_download_mbps,
+     average_download_mbps, average_upload_mbps, ... (key columns only,
+     not all 30+ raw columns)
+
+5. air_quality (one row per district, not per town)
+   - district_id (PK, FK -> districts), pm25_total, pm25_anthropogenic,
+     pm25_non_anthropogenic
+
+6. house_prices (one row per town -- median aggregated)
+   - town_id (PK, FK -> towns), median_price, transaction_count,
+     min_price, max_price
+
+7. crime (one row per town)
+   - town_id (PK, FK -> towns), total_crimes, violent_crimes,
+     property_crimes, other_crimes, crimes_per_1000
+
+Why broadband/air_quality key on district_id but house_prices/crime key
+on town_id: this is the actual structural fact we found during
+filtering, made explicit in the schema instead of hidden in application
+code. It's also a good thing to point out directly in the report as
+evidence of normalisation done thoughtfully rather than mechanically.
+
+This is 3NF because:
+- 1NF: every column holds a single atomic value, no repeating groups.
+- 2NF: every non-key column depends on the WHOLE primary key (trivial
+  here since all our PKs are single columns).
+- 3NF: no non-key column depends on another non-key column. E.g.
+  county_name is not stored on the town or district row -- it's only
+  reachable via county_id -> counties.county_name. Broadband/air
+  quality figures depend only on district_id, not on any particular
+  town, which is exactly why they're on their own table rather than
+  duplicated across every town in that district.

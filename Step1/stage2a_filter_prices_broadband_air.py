@@ -31,7 +31,7 @@ BROADBAND_FILE = RAW / "202205_fixed_laua_performance_r02.csv"
 AIR_QUALITY_FILE = RAW / "popwmpm252023byUKlocalauthority.csv"
 
 house_price_columns = [
-    "TransactionID", "Price", "DateOfTransfer", "PropertyType",
+    "TransactionID", "Price", "DateOfTransfer", "Postcode", "PropertyType",
     "OldNew", "Duration", "PAON", "SAON", "Street", "Locality",
     "Town", "District", "County", "PPDCategoryType", "RecordStatus"
 ]
